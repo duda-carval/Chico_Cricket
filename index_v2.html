@@ -1,0 +1,1069 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Legends of Cricket</title>
+  <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0d1a0d;
+      color: #c8a84b;
+      font-family: 'Share Tech Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+
+    #title {
+      font-size: 2rem;
+      text-align: center;
+      letter-spacing: 4px;
+      margin: 30px 0 6px;
+      text-shadow: 0 0 18px #c8a84b88;
+      color: #c8a84b;
+    }
+
+    #subtitle {
+      font-size: 0.8rem;
+      color: #4a6741;
+      letter-spacing: 6px;
+      margin-bottom: 30px;
+    }
+
+    /* ── Start screen ── */
+    #start-screen {
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      margin-top: 60px;
+    }
+
+    #start-screen .start-title {
+      font-size: 2.8rem;
+      color: #c8a84b;
+      letter-spacing: 6px;
+      text-shadow: 0 0 30px #c8a84b66;
+      margin-bottom: 10px;
+    }
+
+    #start-screen .start-sub {
+      font-size: 0.85rem;
+      color: #4a6741;
+      letter-spacing: 5px;
+      margin-bottom: 60px;
+    }
+
+    .start-divider {
+      width: 200px;
+      height: 1px;
+      background: #2a4a2a;
+      margin: 30px auto;
+    }
+
+    #start-screen .flavour {
+      font-size: 0.8rem;
+      color: #3a5a3a;
+      letter-spacing: 2px;
+      margin-bottom: 50px;
+      line-height: 2;
+    }
+
+    /* ── Panels ── */
+    .panel {
+      border: 1px solid #1e3a1e;
+      padding: 20px;
+      background: #111a11;
+      position: relative;
+      margin-bottom: 4px;
+    }
+
+    .panel-title {
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: #4a6741;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+
+    /* ── Scoreboard ── */
+    #game-container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    #scoreboard {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      text-align: center;
+    }
+
+    .score-block label {
+      font-size: 0.65rem;
+      color: #4a6741;
+      letter-spacing: 3px;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .score-block span {
+      font-size: 2.2rem;
+      color: #c8a84b;
+      text-shadow: 0 0 12px #c8a84b66;
+    }
+
+    /* ── Batters ── */
+    .batter-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid #1e3a1e;
+      font-size: 0.9rem;
+    }
+
+    .batter-row .name { color: #c8a84b; }
+    .batter-row .stats { color: #4a6741; }
+    .star-badge { color: #c8a84b; margin-right: 4px; }
+
+    /* ── Bowler ── */
+    #bowler-line { font-size: 0.85rem; color: #7a9e6a; }
+
+    /* ── Commentary ── */
+    #commentary-box {
+      height: 200px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .commentary-line {
+      font-size: 0.82rem;
+      color: #5a7a5a;
+      padding: 4px 0;
+      border-bottom: 1px solid #1e3a1e;
+      opacity: 0;
+      animation: fadeIn 0.6s forwards;
+    }
+
+    .commentary-line.six    { color: #6dbf6d; }
+    .commentary-line.four   { color: #8fd48f; }
+    .commentary-line.wicket { color: #c8623a; }
+    .commentary-line.info   { color: #4a6741; font-style: italic; }
+
+    @keyframes fadeIn { to { opacity: 1; } }
+
+    /* ── Target ── */
+    #target-panel { display: none; }
+
+    #progress-bar-bg {
+      width: 100%;
+      height: 8px;
+      background: #1e3a1e;
+      margin-top: 10px;
+    }
+
+    #progress-bar-fill {
+      height: 8px;
+      background: #c8a84b;
+      width: 0%;
+      transition: width 0.4s;
+    }
+
+    /* ── Strategy ── */
+    #strategy-panel { text-align: center; }
+
+    .strategy-btn {
+      background: #111a11;
+      border: 1px solid #2a4a2a;
+      color: #c8a84b;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.85rem;
+      padding: 10px 24px;
+      margin: 6px;
+      cursor: pointer;
+      letter-spacing: 2px;
+      transition: all 0.2s;
+    }
+
+    .strategy-btn:hover, .strategy-btn.selected {
+      background: #c8a84b;
+      color: #0d1a0d;
+    }
+
+    /* ── Day/session ── */
+    #day-session {
+      font-size: 0.7rem;
+      letter-spacing: 4px;
+      color: #4a6741;
+      text-align: center;
+    }
+
+    /* ── Setup ── */
+    #setup-screen {
+      width: 100%;
+      max-width: 800px;
+    }
+
+    #player-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin: 16px 0;
+    }
+
+    .player-card {
+      border: 1px solid #1e3a1e;
+      padding: 10px 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+      background: #111a11;
+    }
+
+    .player-card:hover { border-color: #4a6741; }
+
+    .player-card.selected {
+      border-color: #c8a84b;
+      background: #1a2a0d;
+    }
+
+    .player-card .p-name { font-size: 0.9rem; color: #c8a84b; }
+    .player-card .p-meta { font-size: 0.7rem; color: #4a6741; margin-top: 3px; letter-spacing: 2px; }
+    .player-card .p-role { font-size: 0.65rem; color: #5a7a5a; margin-top: 2px; }
+
+    #selection-count {
+      font-size: 0.8rem;
+      color: #4a6741;
+      letter-spacing: 3px;
+      margin-bottom: 10px;
+    }
+
+    /* ── Buttons ── */
+    .main-btn {
+      background: transparent;
+      border: 1px solid #c8a84b;
+      color: #c8a84b;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      padding: 12px 32px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      transition: all 0.2s;
+      display: block;
+      margin: 16px auto;
+    }
+
+    .main-btn:hover {
+      background: #c8a84b;
+      color: #0d1a0d;
+    }
+
+    .main-btn:disabled {
+      border-color: #2a4a2a;
+      color: #2a4a2a;
+      cursor: not-allowed;
+    }
+
+    /* ── Toss ── */
+    #toss-screen {
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      display: none;
+    }
+
+    .toss-btn {
+      background: #111a11;
+      border: 1px solid #4a6741;
+      color: #c8a84b;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 1rem;
+      padding: 14px 40px;
+      margin: 10px;
+      cursor: pointer;
+      letter-spacing: 3px;
+      transition: all 0.2s;
+    }
+
+    .toss-btn:hover {
+      background: #c8a84b;
+      color: #0d1a0d;
+    }
+
+    /* ── Session summary ── */
+    #session-summary {
+      display: none;
+      text-align: center;
+      padding: 30px;
+    }
+
+    #session-summary h2 {
+      font-size: 1rem;
+      letter-spacing: 4px;
+      color: #c8a84b;
+      margin-bottom: 20px;
+    }
+
+    #session-summary p {
+      font-size: 0.85rem;
+      color: #4a6741;
+      letter-spacing: 2px;
+      margin: 8px 0;
+    }
+
+    /* ── Result ── */
+    #result-screen {
+      width: 100%;
+      max-width: 800px;
+      text-align: center;
+      display: none;
+      padding: 60px 40px;
+    }
+
+    #result-title {
+      font-size: 2.5rem;
+      letter-spacing: 6px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 30px currentColor;
+    }
+
+    #result-title.won  { color: #6dbf6d; }
+    #result-title.lost { color: #c8623a; }
+
+    #result-detail {
+      font-size: 0.9rem;
+      color: #4a6741;
+      letter-spacing: 3px;
+      margin-bottom: 40px;
+    }
+
+    /* ── Scrollbar ── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: #111a11; }
+    ::-webkit-scrollbar-thumb { background: #2a4a2a; }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <!-- ── START SCREEN ── -->
+  <div id="start-screen">
+    <div class="start-title">LEGENDS OF CRICKET</div>
+    <div class="start-sub">TEST MATCH SIMULATOR</div>
+    <div class="start-divider"></div>
+    <div class="flavour">
+      Five days. Two innings. Eleven legends.<br>
+      The gentleman's game awaits.
+    </div>
+    <button class="main-btn" onclick="goToSetup()">START MATCH →</button>
+  </div>
+
+  <!-- ── SETUP SCREEN ── -->
+  <div id="setup-screen" class="hidden">
+    <div class="panel">
+      <div class="panel-title">Select Your XI — Pick exactly 11 players</div>
+      <div id="selection-count">0 / 11 selected</div>
+      <div id="player-grid"></div>
+      <button class="main-btn" id="confirm-team-btn" disabled>CONFIRM XI →</button>
+    </div>
+  </div>
+
+  <!-- ── TOSS SCREEN ── -->
+  <div id="toss-screen">
+    <div class="panel">
+      <div class="panel-title">The Toss</div>
+      <p style="color:#4a6741; margin-bottom:20px; letter-spacing:2px;">Call the coin</p>
+      <button class="toss-btn" onclick="callToss('heads')">HEADS</button>
+      <button class="toss-btn" onclick="callToss('tails')">TAILS</button>
+      <div id="toss-result" style="margin-top:20px; color:#5a7a5a; font-size:0.9rem;"></div>
+    </div>
+  </div>
+
+  <!-- ── SESSION SUMMARY ── -->
+  <div id="session-summary" class="panel">
+    <h2 id="summary-title">END OF SESSION</h2>
+    <p id="summary-runs"></p>
+    <p id="summary-wickets"></p>
+    <p id="summary-overs"></p>
+    <p id="summary-score"></p>
+    <button class="main-btn" id="continue-btn" onclick="continueMatch()">CONTINUE →</button>
+  </div>
+
+  <!-- ── GAME SCREEN ── -->
+  <div id="game-container" class="hidden">
+
+    <div id="day-session">DAY 1 — MORNING SESSION</div>
+
+    <div class="panel">
+      <div class="panel-title">Scoreboard</div>
+      <div id="scoreboard">
+        <div class="score-block"><label>RUNS / WKTS</label><span id="score-runs">0/0</span></div>
+        <div class="score-block"><label>OVERS</label><span id="score-overs">0.0</span></div>
+        <div class="score-block"><label>RUN RATE</label><span id="score-rr">0.00</span></div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">At the Crease</div>
+      <div id="batters-display"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Bowling</div>
+      <div id="bowler-line">—</div>
+    </div>
+
+    <div class="panel" id="target-panel">
+      <div class="panel-title">Target</div>
+      <div id="target-line" style="font-size:0.9rem; color:#c8623a;"></div>
+      <div id="progress-bar-bg"><div id="progress-bar-fill"></div></div>
+    </div>
+
+    <div class="panel" id="strategy-panel">
+      <div class="panel-title">Batting Strategy — Choose for this session</div>
+      <div>
+        <button class="strategy-btn" onclick="setStrategy('aggressive', this)">AGGRESSIVE</button>
+        <button class="strategy-btn" onclick="setStrategy('balanced', this)">BALANCED</button>
+        <button class="strategy-btn" onclick="setStrategy('defensive', this)">DEFENSIVE</button>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">Commentary</div>
+      <div id="commentary-box"></div>
+    </div>
+
+    <button class="main-btn hidden" id="declare-btn" onclick="declare()">DECLARE INNINGS →</button>
+
+  </div>
+
+  <!-- ── RESULT SCREEN ── -->
+  <div id="result-screen">
+    <div id="result-title">YOU WON!</div>
+    <div id="result-detail"></div>
+    <button class="main-btn" onclick="location.reload()">PLAY AGAIN →</button>
+  </div>
+
+<script>
+// ═══════════════════════════════════════════
+// PLAYERS
+// ═══════════════════════════════════════════
+
+const PLAYERS = {
+  "Sachin Tendulkar":     { country:"India",        role:"Batsman",      batting_avg:55, attack:85, defense:95, bowling_skill:5  },
+  "Ricky Ponting":        { country:"Australia",    role:"Batsman",      batting_avg:58, attack:90, defense:88, bowling_skill:5  },
+  "Brian Lara":           { country:"West Indies",  role:"Batsman",      batting_avg:53, attack:92, defense:85, bowling_skill:5  },
+  "Rahul Dravid":         { country:"India",        role:"Batsman",      batting_avg:52, attack:65, defense:98, bowling_skill:5  },
+  "Virender Sehwag":      { country:"India",        role:"Batsman",      batting_avg:50, attack:98, defense:60, bowling_skill:20 },
+  "Kumar Sangakkara":     { country:"Sri Lanka",    role:"Batsman",      batting_avg:57, attack:80, defense:90, bowling_skill:5  },
+  "Jacques Kallis":       { country:"South Africa", role:"All-rounder",  batting_avg:55, attack:78, defense:88, bowling_skill:70 },
+  "Sourav Ganguly":       { country:"India",        role:"Batsman",      batting_avg:42, attack:80, defense:75, bowling_skill:30 },
+  "Shane Warne":          { country:"Australia",    role:"Bowler",       batting_avg:17, attack:40, defense:30, bowling_skill:98 },
+  "Muttiah Muralitharan": { country:"Sri Lanka",    role:"Bowler",       batting_avg:12, attack:20, defense:20, bowling_skill:97 },
+  "Glenn McGrath":        { country:"Australia",    role:"Bowler",       batting_avg:8,  attack:15, defense:20, bowling_skill:93 },
+  "Anil Kumble":          { country:"India",        role:"Bowler",       batting_avg:18, attack:25, defense:25, bowling_skill:88 },
+  "Harbhajan Singh":      { country:"India",        role:"Bowler",       batting_avg:20, attack:35, defense:28, bowling_skill:82 },
+  "Brett Lee":            { country:"Australia",    role:"Bowler",       batting_avg:20, attack:35, defense:25, bowling_skill:85 },
+  "Adam Gilchrist":       { country:"Australia",    role:"Wicketkeeper", batting_avg:47, attack:92, defense:70, bowling_skill:5  },
+  "MS Dhoni":             { country:"India",        role:"Wicketkeeper", batting_avg:38, attack:82, defense:78, bowling_skill:5  },
+  "Andrew Flintoff":      { country:"England",      role:"All-rounder",  batting_avg:32, attack:80, defense:65, bowling_skill:75 },
+  "VVS Laxman":           { country:"India",        role:"Batsman",      batting_avg:45, attack:72, defense:88, bowling_skill:5  },
+};
+
+const STARS = ["Sachin Tendulkar", "Shane Warne"];
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+
+let state = {
+  playerXI:[], aiXI:[],
+  battingXI:[], bowlingXI:[],
+  playerBatsFirst: true,
+  currentStrategy:"balanced",
+  innings:1,
+  day:1, session:0,
+  score:{ runs:0, wickets:0, overs:0, balls:0 },
+  innings1Score:0,
+  target:null,
+  batters:[],
+  nextBatterIdx:2,
+  bowlers:[],
+  currentBowlerIdx:0,
+  oversInSession:0,
+  sessionRuns:0, sessionWickets:0, sessionOvers:0,
+  declared:false,
+};
+
+const SESSION_NAMES = ["MORNING","AFTERNOON","EVENING"];
+const OVERS_PER_SESSION = 30;
+const BALL_DELAY_MS = 1200;
+
+// ═══════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════
+
+function goToSetup() {
+  document.getElementById("start-screen").classList.add("hidden");
+  document.getElementById("setup-screen").classList.remove("hidden");
+}
+
+// ═══════════════════════════════════════════
+// SETUP
+// ═══════════════════════════════════════════
+
+const allNames = Object.keys(PLAYERS);
+let selectedNames = [];
+
+function buildPlayerGrid() {
+  const grid = document.getElementById("player-grid");
+  allNames.forEach(name => {
+    const p = PLAYERS[name];
+    const card = document.createElement("div");
+    card.className = "player-card";
+    card.dataset.name = name;
+    card.innerHTML = `
+      <div class="p-name">${STARS.includes(name) ? "★ " : ""}${name}</div>
+      <div class="p-meta">${p.country} · ${p.role}</div>
+      <div class="p-role">BAT AVG ${p.batting_avg} · BOWL ${p.bowling_skill}</div>
+    `;
+    card.onclick = () => togglePlayer(name, card);
+    grid.appendChild(card);
+  });
+}
+
+function togglePlayer(name, card) {
+  if (selectedNames.includes(name)) {
+    selectedNames = selectedNames.filter(n => n !== name);
+    card.classList.remove("selected");
+  } else {
+    if (selectedNames.length >= 11) return;
+    selectedNames.push(name);
+    card.classList.add("selected");
+  }
+  document.getElementById("selection-count").textContent =
+    `${selectedNames.length} / 11 selected`;
+  document.getElementById("confirm-team-btn").disabled =
+    selectedNames.length !== 11;
+}
+
+document.getElementById("confirm-team-btn").onclick = () => {
+  state.playerXI = [...selectedNames];
+  const remaining = allNames.filter(n => !state.playerXI.includes(n));
+  state.aiXI = shuffle(remaining).slice(0, 11);
+  document.getElementById("setup-screen").classList.add("hidden");
+  document.getElementById("toss-screen").style.display = "block";
+};
+
+// ═══════════════════════════════════════════
+// TOSS
+// ═══════════════════════════════════════════
+
+function callToss(call) {
+  const result = Math.random() < 0.5 ? "heads" : "tails";
+  const won    = call === result;
+  const div    = document.getElementById("toss-result");
+
+  div.textContent = `Coin landed on ${result.toUpperCase()}. ` +
+    (won ? "You won the toss!" : "AI won the toss and elected to bat.");
+
+  setTimeout(() => {
+    if (won) {
+      div.innerHTML += `<br><br>
+        <button class="toss-btn" onclick="startMatch(true)">BAT FIRST</button>
+        <button class="toss-btn" onclick="startMatch(false)">BOWL FIRST</button>`;
+    } else {
+      setTimeout(() => startMatch(false), 1500);
+    }
+  }, 800);
+}
+
+// ═══════════════════════════════════════════
+// MATCH START
+// ═══════════════════════════════════════════
+
+function startMatch(playerBatsFirst) {
+  state.playerBatsFirst = playerBatsFirst;
+  document.getElementById("toss-screen").style.display = "none";
+
+  if (playerBatsFirst) {
+    state.battingXI = [...state.playerXI];
+    state.bowlingXI = [...state.aiXI];
+  } else {
+    state.battingXI = [...state.aiXI];
+    state.bowlingXI = [...state.playerXI];
+  }
+
+  initBattersAndBowlers();
+  showGame();
+  showStrategy();
+}
+
+function showGame() {
+  document.getElementById("game-container").classList.remove("hidden");
+  updateDaySession();
+}
+
+function initBattersAndBowlers() {
+  state.batters = state.battingXI.map((name, i) => ({
+    name, ...PLAYERS[name],
+    runs:0, balls:0, notOut:true, atCrease: i < 2
+  }));
+  state.nextBatterIdx = 2;
+
+  state.bowlers = state.bowlingXI
+    .map(name => ({ name, ...PLAYERS[name], oversBowled:0, runsConceded:0, wicketsTaken:0 }))
+    .sort((a,b) => b.bowling_skill - a.bowling_skill);
+
+  state.currentBowlerIdx = 0;
+}
+
+// ═══════════════════════════════════════════
+// STRATEGY
+// ═══════════════════════════════════════════
+
+function setStrategy(s, btn) {
+  state.currentStrategy = s;
+  document.querySelectorAll(".strategy-btn").forEach(b => b.classList.remove("selected"));
+  btn.classList.add("selected");
+  document.getElementById("strategy-panel").classList.add("hidden");
+  runSession();
+}
+
+function showStrategy() {
+  if (isPlayerBatting()) {
+    document.getElementById("strategy-panel").classList.remove("hidden");
+    document.querySelectorAll(".strategy-btn").forEach(b => b.classList.remove("selected"));
+  } else {
+    state.currentStrategy = "balanced";
+    document.getElementById("strategy-panel").classList.add("hidden");
+    runSession();
+  }
+}
+
+function isPlayerBatting() {
+  return state.innings === 1 ? state.playerBatsFirst : !state.playerBatsFirst;
+}
+
+// ═══════════════════════════════════════════
+// BALL SIMULATION
+// ═══════════════════════════════════════════
+
+function simulateBall(batsman, bowler, strategy) {
+  const mods = {
+    aggressive: { attackBoost:15, defensePenalty:15, wicketBoost:8  },
+    balanced:   { attackBoost:0,  defensePenalty:0,  wicketBoost:0  },
+    defensive:  { attackBoost:-10,defensePenalty:-10,wicketBoost:-6 },
+  };
+  const mod = mods[strategy] || mods.balanced;
+
+  const effAttack  = Math.min(100, batsman.attack  + mod.attackBoost);
+  const effDefense = Math.min(100, batsman.defense - mod.defensePenalty);
+  const effBowl    = bowler.bowling_skill;
+
+  // Rebalanced: legends should survive and score
+  const wicketChance = Math.max(3, Math.min(25,
+    (effBowl - effDefense) / 3 + mod.wicketBoost
+  ));
+
+  if (Math.random() * 100 < wicketChance) {
+    return { outcome:"wicket", runs:0,
+      commentary: getCommentary("wicket", batsman, bowler) };
+  }
+
+  // Run scoring weighted toward 1s and 2s, boundaries possible
+  const runWeight = Math.max(15, effAttack - effBowl / 3);
+
+  const outcomes = {
+    0: Math.max(5,  40 - runWeight),
+    1: 30,
+    2: 20,
+    3: 8,
+    4: Math.max(8,  runWeight / 2.5),
+    6: Math.max(3,  runWeight / 5),
+  };
+
+  const runs = weightedRandom(outcomes);
+  return { outcome:"runs", runs,
+    commentary: getCommentary("runs", batsman, bowler, runs) };
+}
+
+function weightedRandom(options) {
+  const keys    = Object.keys(options).map(Number);
+  const weights = Object.values(options);
+  const total   = weights.reduce((a,b) => a+b, 0);
+  let r = Math.random() * total;
+  for (let i = 0; i < keys.length; i++) {
+    r -= weights[i];
+    if (r <= 0) return keys[i];
+  }
+  return keys[keys.length - 1];
+}
+
+// ═══════════════════════════════════════════
+// COMMENTARY
+// ═══════════════════════════════════════════
+
+function getCommentary(event, batsman, bowler, runs=0) {
+  const W = [
+    `OUT! ${bowler.name} strikes! ${batsman.name} has to walk back.`,
+    `What a delivery! ${batsman.name} is clean bowled by ${bowler.name}!`,
+    `Gone! ${bowler.name} gets the big wicket of ${batsman.name}!`,
+    `That's out! ${batsman.name} couldn't handle that one from ${bowler.name}.`,
+    `Caught! ${batsman.name} goes for ${batsman.runs}. ${bowler.name} is delighted.`,
+    `Plumb in front! ${batsman.name} is given out LBW to ${bowler.name}.`,
+    `Edged and taken! ${batsman.name} departs. ${bowler.name} celebrates.`,
+    `${batsman.name} misjudges completely. ${bowler.name} rips out the stumps!`,
+    `End of a fine innings — ${batsman.name} goes for ${batsman.runs} runs.`,
+    `${bowler.name} is on fire! Another one bites the dust.`,
+  ];
+  const R = {
+    0: [
+      `Dot ball. ${bowler.name} is keeping it tight.`,
+      `Excellent line and length. Nothing doing.`,
+      `${batsman.name} plays it straight to the fielder.`,
+      `Beaten outside the off stump! No run.`,
+      `Tight delivery from ${bowler.name}. ${batsman.name} defends solidly.`,
+      `No room to swing there. Dot ball.`,
+      `${bowler.name} hits the corridor of uncertainty. Maiden territory.`,
+      `${batsman.name} leaves that one alone. Good judgement.`,
+    ],
+    1: [
+      `Nudged away for a single by ${batsman.name}.`,
+      `Quick single taken. ${batsman.name} and partner rotate the strike.`,
+      `Worked to midwicket — they run one.`,
+      `${batsman.name} tucks it off the pads for a single.`,
+      `Gentle push into the off side. One run.`,
+    ],
+    2: [
+      `Good running! ${batsman.name} turns it for two.`,
+      `Pushed into the gap — they come back for two.`,
+      `Two runs. ${batsman.name} finds the space perfectly.`,
+      `Driven along the ground, the fielder cuts it off. Two runs.`,
+    ],
+    3: [
+      `Three runs! ${batsman.name} finds the gap beautifully.`,
+      `They run hard — three taken! Good cricket.`,
+      `Misfield! ${batsman.name} capitalises and gets three.`,
+    ],
+    4: [
+      `FOUR! ${batsman.name} drives it beautifully through the covers!`,
+      `FOUR! That raced away to the boundary!`,
+      `Cracking shot! ${batsman.name} finds the fence!`,
+      `FOUR! Punched off the back foot — no stopping that.`,
+      `Elegant boundary from ${batsman.name}. Textbook cover drive.`,
+      `FOUR! Swept fine, the fielder had no chance.`,
+      `That's pure class from ${batsman.name}. Four runs!`,
+      `Cut hard behind point — FOUR! ${batsman.name} in fine touch.`,
+    ],
+    6: [
+      `SIX! ${batsman.name} launches it into the stands!`,
+      `MASSIVE SIX! ${batsman.name} takes on ${bowler.name} and wins!`,
+      `That's gone all the way! Right out of the ground!`,
+      `SIX! Cleared the ropes with ease. ${bowler.name} looks on in disbelief.`,
+      `What a hit! ${batsman.name} deposits that into the crowd!`,
+      `SIX! Walked across the stumps and heaved it over midwicket!`,
+      `${bowler.name} goes full and ${batsman.name} lofts it straight — six!`,
+    ],
+  };
+
+  if (event === "wicket") return pick(W);
+  return pick(R[runs] || [`${runs} runs scored.`]);
+}
+
+// ═══════════════════════════════════════════
+// SESSION RUNNER
+// ═══════════════════════════════════════════
+
+async function runSession() {
+  state.oversInSession  = 0;
+  state.sessionRuns     = 0;
+  state.sessionWickets  = 0;
+  state.sessionOvers    = 0;
+
+  document.getElementById("game-container").classList.remove("hidden");
+  document.getElementById("session-summary").style.display = "none";
+
+  for (let over = 0; over < OVERS_PER_SESSION; over++) {
+    if (state.score.wickets >= 10) break;
+    if (state.target && state.score.runs >= state.target) break;
+
+    for (let ball = 0; ball < 6; ball++) {
+      if (state.score.wickets >= 10) break;
+      if (state.target && state.score.runs >= state.target) break;
+
+      const batsman = getOnStrike();
+      const bowler  = getCurrentBowler();
+      const result  = simulateBall(batsman, bowler, state.currentStrategy);
+
+      batsman.runs  += result.runs;
+      batsman.balls += 1;
+      bowler.runsConceded += result.runs;
+      state.score.runs    += result.runs;
+      state.score.balls   += 1;
+      state.sessionRuns   += result.runs;
+
+      if (result.outcome === "wicket") {
+        state.score.wickets  += 1;
+        state.sessionWickets += 1;
+        bowler.wicketsTaken  += 1;
+        batsman.notOut        = false;
+        batsman.atCrease      = false;
+
+        if (state.score.wickets < 10 && state.nextBatterIdx < 11) {
+          state.batters[state.nextBatterIdx].atCrease = true;
+          state.nextBatterIdx++;
+        }
+      } else if (result.runs % 2 === 1) {
+        rotateStrike();
+      }
+
+      updateDisplay(result);
+      addCommentary(result);
+      await sleep(BALL_DELAY_MS);
+    }
+
+    // End of over
+    state.score.overs++;
+    state.oversInSession++;
+    state.sessionOvers++;
+    getCurrentBowler().oversBowled++;
+    rotateStrike();
+    rotateBowler();
+  }
+
+  showSessionSummary();
+}
+
+// ═══════════════════════════════════════════
+// SESSION SUMMARY
+// ═══════════════════════════════════════════
+
+function showSessionSummary() {
+  const inningsOver = state.score.wickets >= 10 ||
+    (state.target && state.score.runs >= state.target) ||
+    state.day > 5;
+
+  document.getElementById("game-container").classList.add("hidden");
+  document.getElementById("session-summary").style.display = "block";
+
+  const sessionLabel = `${SESSION_NAMES[state.session]} SESSION — DAY ${state.day}`;
+
+  if (inningsOver) {
+    document.getElementById("summary-title").textContent = `END OF INNINGS ${state.innings}`;
+    document.getElementById("continue-btn").textContent =
+      state.innings === 1 ? "START 2ND INNINGS →" : "SEE RESULT →";
+  } else {
+    document.getElementById("summary-title").textContent = `END OF ${sessionLabel}`;
+    document.getElementById("continue-btn").textContent = "CONTINUE →";
+  }
+
+  document.getElementById("summary-runs").textContent =
+    `Runs this session: ${state.sessionRuns}`;
+  document.getElementById("summary-wickets").textContent =
+    `Wickets lost: ${state.sessionWickets}`;
+  document.getElementById("summary-overs").textContent =
+    `Overs bowled: ${state.sessionOvers}`;
+  document.getElementById("summary-score").textContent =
+    `Total: ${state.score.runs}/${state.score.wickets} (${state.score.overs} ov)`;
+
+  // Advance session/day
+  state.session++;
+  if (state.session >= 3) {
+    state.session = 0;
+    state.day++;
+  }
+}
+
+function continueMatch() {
+  const inningsOver = state.score.wickets >= 10 ||
+    (state.target && state.score.runs >= state.target) ||
+    state.day > 5;
+
+  if (inningsOver) {
+    if (state.innings === 1) {
+      startInnings2();
+    } else {
+      showResult();
+    }
+    return;
+  }
+
+  // Offer declare after day 2 innings 1
+  if (state.innings === 1 && state.day > 2 && isPlayerBatting()) {
+    document.getElementById("declare-btn").classList.remove("hidden");
+  }
+
+  document.getElementById("session-summary").style.display = "none";
+  document.getElementById("game-container").classList.remove("hidden");
+  updateDaySession();
+  showStrategy();
+}
+
+function declare() {
+  document.getElementById("declare-btn").classList.add("hidden");
+  addCommentary({ outcome:"info", commentary:"Innings declared!" });
+  startInnings2();
+}
+
+// ═══════════════════════════════════════════
+// INNINGS 2
+// ═══════════════════════════════════════════
+
+function startInnings2() {
+  state.innings1Score = state.score.runs;
+  state.target        = state.score.runs + 1;
+  state.innings       = 2;
+  state.score         = { runs:0, wickets:0, overs:0, balls:0 };
+  state.day           = 1;
+  state.session       = 0;
+
+  const tmp        = state.battingXI;
+  state.battingXI  = state.bowlingXI;
+  state.bowlingXI  = tmp;
+
+  initBattersAndBowlers();
+  document.getElementById("target-panel").style.display = "block";
+  document.getElementById("session-summary").style.display = "none";
+  document.getElementById("game-container").classList.remove("hidden");
+  updateDaySession();
+  showStrategy();
+}
+
+// ═══════════════════════════════════════════
+// RESULT
+// ═══════════════════════════════════════════
+
+function showResult() {
+  document.getElementById("session-summary").style.display = "none";
+  document.getElementById("game-container").classList.add("hidden");
+  document.getElementById("result-screen").style.display  = "block";
+
+  const chasingTeamIsPlayer = !state.playerBatsFirst;
+  let playerWon;
+  let detail;
+
+  if (state.score.runs >= state.target) {
+    playerWon = chasingTeamIsPlayer;
+    detail    = `Won by ${10 - state.score.wickets} wickets`;
+  } else {
+    playerWon = !chasingTeamIsPlayer;
+    const deficit = state.target - state.score.runs - 1;
+    detail = `Won by ${deficit} runs`;
+  }
+
+  const titleEl = document.getElementById("result-title");
+  titleEl.textContent = playerWon ? "YOU WON!" : "YOU LOST!";
+  titleEl.className   = playerWon ? "won" : "lost";
+
+  document.getElementById("result-detail").textContent =
+    `${playerWon ? "Your XI" : "Legends XI"} ${detail}  ·  ` +
+    `1st innings: ${state.innings1Score}  ·  2nd innings: ${state.score.runs}/${state.score.wickets}`;
+}
+
+// ═══════════════════════════════════════════
+// DISPLAY
+// ═══════════════════════════════════════════
+
+function updateDisplay(result) {
+  document.getElementById("score-runs").textContent =
+    `${state.score.runs}/${state.score.wickets}`;
+  document.getElementById("score-overs").textContent =
+    `${state.score.overs}.${state.score.balls % 6}`;
+  const rr = state.score.overs > 0
+    ? (state.score.runs / state.score.overs).toFixed(2) : "0.00";
+  document.getElementById("score-rr").textContent = rr;
+
+  const atCrease = state.batters.filter(b => b.atCrease);
+  document.getElementById("batters-display").innerHTML = atCrease.map(b => {
+    const sr = b.balls > 0 ? ((b.runs / b.balls)*100).toFixed(1) : "0.0";
+    return `<div class="batter-row">
+      <span class="name">${STARS.includes(b.name) ? '<span class="star-badge">★</span>' : ""}${b.name}</span>
+      <span class="stats">${b.runs} (${b.balls}) SR: ${sr}</span>
+    </div>`;
+  }).join("");
+
+  const bowler = getCurrentBowler();
+  document.getElementById("bowler-line").textContent =
+    `${bowler.name}  ${bowler.oversBowled}ov  ${bowler.wicketsTaken}w  ${bowler.runsConceded}r`;
+
+  if (state.target) {
+    const needed = state.target - state.score.runs;
+    document.getElementById("target-line").textContent =
+      `Target: ${state.target}  ·  Need ${needed} more runs`;
+    const pct = Math.min(100,(state.score.runs / state.target)*100);
+    document.getElementById("progress-bar-fill").style.width = pct + "%";
+  }
+}
+
+function addCommentary(result) {
+  const box  = document.getElementById("commentary-box");
+  const line = document.createElement("div");
+  line.className = "commentary-line";
+  if (result.outcome === "wicket")   line.classList.add("wicket");
+  else if (result.runs === 6)        line.classList.add("six");
+  else if (result.runs === 4)        line.classList.add("four");
+  else if (result.outcome === "info")line.classList.add("info");
+  line.textContent = result.commentary;
+  box.prepend(line);
+  while (box.children.length > 40) box.removeChild(box.lastChild);
+}
+
+function updateDaySession() {
+  document.getElementById("day-session").textContent =
+    `DAY ${state.day} — ${SESSION_NAMES[state.session] || "MORNING"} SESSION  |  INNINGS ${state.innings}`;
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+
+function getOnStrike() {
+  return state.batters.find(b => b.atCrease && b.notOut) || state.batters[0];
+}
+
+function getCurrentBowler() {
+  return state.bowlers[state.currentBowlerIdx % state.bowlers.length];
+}
+
+function rotateStrike() {
+  const pair = state.batters.filter(b => b.atCrease && b.notOut);
+  if (pair.length === 2) {
+    const tmp = pair[0].atCrease;
+    pair[0].atCrease = pair[1].atCrease;
+    pair[1].atCrease = tmp;
+  }
+}
+
+function rotateBowler() {
+  let tries = 0;
+  do {
+    state.currentBowlerIdx = (state.currentBowlerIdx + 1) % state.bowlers.length;
+    tries++;
+  } while (
+    state.bowlers[state.currentBowlerIdx].bowling_skill < 10 &&
+    tries < state.bowlers.length
+  );
+}
+
+function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+function pick(arr)    { return arr[Math.floor(Math.random() * arr.length)]; }
+function sleep(ms)    { return new Promise(r => setTimeout(r, ms)); }
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+
+buildPlayerGrid();
+</script>
+</body>
+</html>
